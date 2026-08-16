@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f5f7">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ComfyUI 遥控">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:,">
+<title>ComfyUI 遥控</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <h1 class="brand">ComfyUI 遥控</h1>
+  </div>
+  <nav class="tabs">
+    <a class="tab active" href="#/generate">生成</a>
+    <a class="tab" href="#/gallery">图库</a>
+    <a class="tab" href="#/settings">设置</a>
+  </nav>
+</header>
+
+<div class="template-bar">
+  <label class="template-label" for="tpl-select">模板</label>
+  <select id="tpl-select" class="select tpl-select" aria-label="选择模板"></select>
+</div>
+
+<main id="app" class="app"></main>
+
+<div id="bottom-bar" class="bottom-bar" style="display:none">
+  <div class="bottom-row">
+    <span id="ws-status" class="ws-status" title="实时推送连接状态"></span>
+    <div class="stepper">
+      <button id="runs-minus" class="btn btn-ghost step-btn" type="button" aria-label="减少生成次数">−</button>
+      <input id="runs-input" class="input runs-input" type="number" min="1" max="20" value="1" inputmode="numeric" aria-label="生成次数">
+      <button id="runs-plus" class="btn btn-ghost step-btn" type="button" aria-label="增加生成次数">＋</button>
+      <span class="runs-label">次</span>
+    </div>
+    <button id="gen-btn" class="btn btn-generate" type="button">生成</button>
+    <button id="cancel-btn" class="btn btn-danger" type="button" style="display:none">取消</button>
+  </div>
+  <div id="progress-wrap" class="progress-wrap" style="display:none">
+    <div class="progress-row">
+      <div class="progress"><div id="progress-bar" class="progress-fill"></div></div>
+      <span id="progress-label" class="progress-label">进度 0%</span>
+    </div>
+  </div>
+</div>
+
+<div id="toast-root" class="toast-root"></div>
+<div id="modal-root"></div>
+
+<script src="js/ui.js"></script>
+<script src="js/ws.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pages/generate.js"></script>
+<script src="js/pages/gallery.js"></script>
+<script src="js/pages/settings.js"></script>
+</body>
+</html>

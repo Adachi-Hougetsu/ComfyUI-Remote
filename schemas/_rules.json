@@ -1,0 +1,176 @@
+{
+  "widgets": {
+    "guidance": {
+      "type": "float",
+      "min": 0,
+      "max": 35,
+      "step": 0.5,
+      "default": 3.5,
+      "label": "CFG Guidance"
+    },
+    "reference_strength": {
+      "type": "float",
+      "min": 0,
+      "max": 2,
+      "step": 0.05,
+      "default": 1.0,
+      "label": "参考强度"
+    },
+    "fancy_ratio": {
+      "type": "float",
+      "min": 0,
+      "max": 2,
+      "step": 0.01,
+      "default": 0.5,
+      "label": "花哨比例"
+    },
+    "block_weights": {
+      "type": "string",
+      "label": "分块权重（IN/OUT/MID）"
+    },
+    "base_multiplier": {
+      "type": "float",
+      "min": 0,
+      "max": 2,
+      "step": 0.05,
+      "default": 1.0,
+      "label": "基础倍率"
+    },
+    "start_index": {
+      "type": "int",
+      "min": 0,
+      "max": 64,
+      "step": 1,
+      "default": 0,
+      "label": "起始块"
+    },
+    "end_index": {
+      "type": "int",
+      "min": 0,
+      "max": 64,
+      "step": 1,
+      "default": 0,
+      "label": "结束块"
+    },
+    "filter_mode": {
+      "type": "combo",
+      "label": "过滤模式"
+    },
+    "use_weight_schedule": {
+      "type": "combo",
+      "options": ["true", "false"],
+      "default": "false",
+      "label": "权重调度"
+    },
+    "inverse": {
+      "type": "combo",
+      "options": ["true", "false"],
+      "default": "false",
+      "label": "反向"
+    },
+    "control_mode": {
+      "type": "combo",
+      "label": "控制模式"
+    },
+    "resize_mode": {
+      "type": "combo",
+      "label": "缩放模式"
+    },
+    "effect": {
+      "type": "float",
+      "min": 0,
+      "max": 2,
+      "step": 0.05,
+      "default": 1.0,
+      "label": "生效强度"
+    },
+    "guidance_start": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0,
+      "label": "开始步"
+    },
+    "guidance_end": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 1,
+      "label": "结束步"
+    },
+    "softness": {
+      "type": "float",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.5,
+      "label": "软度"
+    },
+    "unet_name": {
+      "type": "combo",
+      "label": "UNet 模型"
+    },
+    "weight_dtype": {
+      "type": "combo",
+      "label": "权重类型"
+    },
+    "clip_name": {
+      "type": "combo",
+      "label": "CLIP 模型"
+    },
+    "vae_name": {
+      "type": "combo",
+      "label": "VAE 模型"
+    },
+    "type": {
+      "type": "combo",
+      "label": "类型"
+    },
+    "device": {
+      "type": "combo",
+      "label": "设备"
+    },
+    "sel_mode": {
+      "type": "combo",
+      "label": "选择模式"
+    },
+    "mode": {
+      "type": "combo",
+      "label": "模式"
+    },
+    "preview_method": {
+      "type": "combo",
+      "label": "预览方式"
+    },
+    "vae_decode": {
+      "type": "combo",
+      "label": "VAE 解码"
+    },
+    "wildcard_text": {
+      "type": "string",
+      "label": "通配符文本"
+    },
+    "populated_text": {
+      "type": "string",
+      "label": "展开后文本"
+    },
+    "part1": {
+      "type": "string",
+      "label": "提示词片段 1"
+    },
+    "part2": {
+      "type": "string",
+      "label": "提示词片段 2"
+    },
+    "part3": {
+      "type": "string",
+      "label": "提示词片段 3"
+    },
+    "part4": {
+      "type": "string",
+      "label": "提示词片段 4"
+    }
+  }
+}

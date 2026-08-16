@@ -1,0 +1,101 @@
+{
+  "id": "amiya",
+  "title": "阿米娅 · Illustrious-XL",
+  "workflow": "amiya.json",
+  "save_output_node": 9,
+  "drop": [19],
+
+  "model": { "node": 4, "widget": "ckpt_name", "label": "底模" },
+
+  "lora": {
+    "anchor": { "node": 4, "model_slot": 0, "clip_slot": 1 },
+    "template_lora_chain": [10],
+    "max": 8,
+    "connection": "serial",
+    "default": [
+      {
+        "name": "Robertlu1021_amiya_medic_solo_around_the_world_arknights_v1.0-000010.safetensors",
+        "strength_model": 0.85,
+        "strength_clip": 1.0
+      }
+    ]
+  },
+
+  "prompts": {
+    "positive": {
+      "node": 6,
+      "widget": "text",
+      "default": "masterpiece,best quality, amazing quality, 1girl, solo, bust shot, vertical composition, close-up portrait, focus on face,\ndense giant yellow sunflowers surround the character, sunflower petals and green leaves frame both sides of face, partial foreground leaves occlude cheeks, layered plant occlusion,\namiya_(medic)_(solo_around_the_world)_(arknights), rabbit ears, brown long hair, teal eyes, detailed facial features,\ngolden hour sunlight, sunlight,dappled sunlight filtering through flower gaps, warm golden rim light, cool teal shadow tone, high contrast color grading, painterly anime brush strokes, clean cel shading, depth of field,\ngolden neck tattoo, black_necklace, frilled collar, witch frilled hat, hat bow, sleeveless dress,sunshine,smile slightly."
+    },
+    "negative": {
+      "node": 7,
+      "widget": "text",
+      "default": "worst quality, low quality, bad anatomy, bad hands, text, watermark, signature,  many background elements, panoramic, multiple people, cloudy sky, daylight, messy color block,bad eyes."
+    }
+  },
+
+  "params": [
+    { "key": "steps", "node": 3, "widget": "steps", "label": "步数", "type": "int", "min": 1, "max": 150, "default": 28 },
+    { "key": "cfg", "node": 3, "widget": "cfg", "label": "CFG", "type": "float", "min": 1, "max": 20, "step": 0.5, "default": 4 },
+    { "key": "sampler_name", "node": 3, "widget": "sampler_name", "label": "采样器", "type": "combo", "default": "dpmpp_2m_sde_gpu" },
+    { "key": "scheduler", "node": 3, "widget": "scheduler", "label": "调度器", "type": "combo", "default": "karras" },
+    { "key": "denoise", "node": 3, "widget": "denoise", "label": "重绘幅度", "type": "float", "min": 0, "max": 1, "step": 0.05, "default": 0.8 },
+    { "key": "width", "node": 5, "widget": "width", "label": "宽", "type": "int", "min": 256, "max": 2048, "step": 64, "default": 1024 },
+    { "key": "height", "node": 5, "widget": "height", "label": "高", "type": "int", "min": 256, "max": 2048, "step": 64, "default": 1232 },
+    {
+      "key": "seed",
+      "node": 3,
+      "widget": "seed",
+      "label": "种子",
+      "type": "int",
+      "min": 0,
+      "max": 9223372036854775807,
+      "seed_mode": { "type": "toggle", "options": ["fixed", "random"] }
+    }
+  ],
+
+  "node_groups": [
+    {
+      "key": "openpose",
+      "label": "OpenPose 姿态控制",
+      "mode": "patch",
+      "default_enabled": false,
+      "nodes": [11, 14, 17, 20, 29],
+      "patches_enable": [
+        { "remove": [[35, 0], [3, 1]], "remove_type": "CONDITIONING" },
+        { "remove": [[35, 1], [3, 2]], "remove_type": "CONDITIONING" },
+        { "add": [[35, 0], [17, 0]], "add_type": "CONDITIONING" },
+        { "add": [[35, 1], [17, 1]], "add_type": "CONDITIONING" },
+        { "add": [[17, 0], [3, 1]], "add_type": "CONDITIONING" },
+        { "add": [[17, 1], [3, 2]], "add_type": "CONDITIONING" },
+        { "add": [[4, 2], [17, 3]], "add_type": "VAE" }
+      ],
+      "extra_params": [
+        { "key": "op_strength", "node": 17, "widget": "strength", "label": "姿态强度", "type": "float", "min": 0, "max": 2, "step": 0.05, "default": 0.7 },
+        { "key": "op_start", "node": 17, "widget": "start_percent", "label": "起始位置", "type": "float", "min": 0, "max": 1, "step": 0.05, "default": 0 },
+        { "key": "op_end", "node": 17, "widget": "end_percent", "label": "结束位置", "type": "float", "min": 0, "max": 1, "step": 0.05, "default": 0.9 }
+      ]
+    },
+    {
+      "key": "ipa",
+      "label": "IPAdapter 风格参考",
+      "mode": "bypass",
+      "default_enabled": true,
+      "bypass_node": 43,
+      "nodes": [43, 44, 45, 46],
+      "extra_params": [
+        { "key": "ipa_weight", "node": 43, "widget": "weight", "label": "IPA 权重", "type": "float", "min": 0, "max": 2, "step": 0.05, "default": 0.4 },
+        { "key": "ipa_start", "node": 43, "widget": "start_at", "label": "IPA 起始", "type": "float", "min": 0, "max": 1, "step": 0.05, "default": 0.3 },
+        { "key": "ipa_end", "node": 43, "widget": "end_at", "label": "IPA 结束", "type": "float", "min": 0, "max": 1, "step": 0.05, "default": 1 }
+      ]
+    }
+  ],
+
+  "image_slots": [
+    { "key": "ipa_ref",       "label": "IPA 参考图",   "node": 44, "group": "ipa" },
+    { "key": "openpose_pose", "label": "姿态图",       "node": 14, "group": "openpose" },
+    { "key": "compose_ref",   "label": "构图参考图",   "node": 31, "group": null }
+  ],
+
+  "seed_mode_default": "fixed"
+}
