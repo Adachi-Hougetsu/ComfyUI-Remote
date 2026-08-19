@@ -51,7 +51,6 @@
       health = await App.api('/api/health');
     } catch (err) {
       root.innerHTML = '';
-      root.append(tokenCard);
       root.append(themeCard);
       root.append(el('div', {
         class: 'empty',
@@ -60,7 +59,6 @@
       return;
     }
     root.innerHTML = '';
-    root.append(tokenCard);
     root.append(themeCard);
 
     // 连接状态

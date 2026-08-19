@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const CACHE = 'comfyui-remote-v23';
+const CACHE = 'comfyui-remote-v24';
 const SHELL = [
   './',
   './index.html',
