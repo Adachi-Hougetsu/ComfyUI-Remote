@@ -17,50 +17,8 @@
     root.innerHTML = '';
     root.append(UI.spinner());
 
-    // 访问令牌卡片（不依赖 API，401 时也能显示以便填令牌）
-    const tokenCard = el('div', { class: 'card' });
-    tokenCard.append(el('div', { class: 'section-title', text: '访问令牌' }));
-    tokenCard.append(el('div', {
-      class: 'status-note',
-      text: '给控制层加锁：设置后所有设备访问 /api 都需要令牌（钥匙）。' +
-        '令牌保存在电脑端（data/settings.json），立即生效；其他设备需在设置页填写同一令牌。'
-    }));
-    const tokField = el('div', { class: 'settings-field' });
-    const tokInput = el('input', { class: 'input', type: 'password', placeholder: '留空 = 不启用令牌', value: App.getToken() });
-    tokField.append(tokInput);
-    const tokActions = el('div', { class: 'settings-actions' });
-    const tokGen = el('button', { class: 'btn btn-ghost', text: '生成随机令牌' });
-    tokGen.addEventListener('click', () => {
-      try {
-        const a = new Uint8Array(16);
-        crypto.getRandomValues(a);
-        tokInput.value = Array.from(a, (b) => b.toString(16).padStart(2, '0')).join('');
-        UI.toast('已生成，点「启用令牌」生效', 'info');
-      } catch (err) {
-        UI.toast('生成失败', 'error');
-      }
-    });
-    const tokSave = el('button', { class: 'btn btn-primary', text: '启用令牌' });
-    tokSave.addEventListener('click', async () => {
-      const v = tokInput.value.trim();
-      try {
-        await App.api('/api/settings', {
-          method: 'PUT', body: JSON.stringify({ access_token: v })
-        });
-        App.setToken(v);
-        UI.toast(v ? '令牌已启用，立即生效' : '令牌已关闭', 'success');
-        render();
-      } catch (err) { /* App.api 已提示（改令牌需带旧令牌） */ }
-    });
-    tokActions.append(tokGen, tokSave);
-    tokenCard.append(tokField);
-    tokenCard.append(tokActions);
-    tokenCard.append(el('div', {
-      class: 'status-note',
-      text: '注意：修改令牌需要携带当前令牌（其他设备改不了你的锁）；' +
-        '忘记令牌时，在电脑上删除 data/settings.json 里的 access_token 字段并重启。'
-    }));
-    root.append(tokenCard);
+    // 访问令牌已停用：局域网访问由 Tailscale-only 防火墙保护（详见 README 安全章节）。
+    // 如未来需要，可启用环境变量 ACCESS_TOKEN（config.py）。此处不再展示令牌 UI。
 
     // 外观卡片：跟随系统 / 浅色 / 深色（立即生效并持久化；不依赖后端，先创建）
     const themeCard = el('div', { class: 'card' });
