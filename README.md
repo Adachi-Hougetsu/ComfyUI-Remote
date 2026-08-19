@@ -1,4 +1,4 @@
-﻿# ComfyUI Remote（局域网手机遥控 ComfyUI）
+# ComfyUI Remote（局域网手机遥控 ComfyUI）
 
 在局域网内用手机 / 平板遥控电脑上的 [ComfyUI](https://github.com/comfyanonymous/ComfyUI)：选模板、填参数、一键生成，出图后直接在手机上浏览。
 
@@ -19,8 +19,25 @@
 - **断线自愈**：控制层与 ComfyUI 的 WS 断开自动重连，任务进度轮询对账；切页后进度自动恢复
 - **外观切换**：设置页可选跟随系统 / 浅色 / 深色
 - **ComfyUI 地址可配置**：设置页直接修改（热重连，免改代码重启）
-- **可选鉴权**：设置 `ACCESS_TOKEN` 环境变量后，`/api/*` 与 `/ws` 需带 `X-Access-Token` 头（或 `?token=` 参数）
+- **可选鉴权**：设置页一键生成访问令牌（后端持久化、热更新），`/api/*` 与 `/ws` 需带 `X-Access-Token` 头（或 `?token=` 参数）
 - **安卓 HTTPS 安装态**：一键自签证书，浏览器「添加到主屏幕」走 HTTPS（见 `docs/安卓安装态.md`）
+
+## 安全（共用网络 / 宿舍 / 公共 WiFi）
+
+控制层默认监听 `0.0.0.0:8000`——同一局域网内任何设备都能访问。共用网络建议：
+
+1. **访问令牌**（必做）：手机端**设置页 → 访问令牌 → 生成随机令牌 → 启用令牌**。
+   令牌保存在电脑端 `data/settings.json`（立即生效、热更新，旧令牌即刻失效）；
+   其他设备需在各自设置页填写同一令牌。修改令牌需携带当前令牌；忘记令牌时
+   删除 `data/settings.json` 里的 `access_token` 字段并重启。
+2. **防火墙来源限制**（推荐）：只放行 Tailscale 网段访问 8000 端口，局域网内
+   其他设备直接连接失败（连端口扫描都探测不到服务）：
+   ```bat
+   netsh advfirewall firewall delete rule name="ComfyUI Remote (comfyui-ds venv)"
+   netsh advfirewall firewall add rule name="ComfyUI Remote (Tailscale-only)" dir=in action=allow program="<你的路径>\comfyui-ds\.venv\Scripts\python.exe" protocol=TCP localport=8000 remoteip=100.64.0.0/10 profile=any
+   ```
+   配置后所有设备（手机/平板）通过 Tailscale 虚拟 IP（`100.x.x.x`）访问。
+3. **HTTPS**（可选，防局域网嗅探）：`make_cert.bat` 生成证书后 `run.bat https` 启动。
 
 ## 如何连接（使用者必读）
 

@@ -9,7 +9,8 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from config import ACCESS_TOKEN, AUTO_IMPORT, CERT_DIR, DATA_DIR, STATIC_DIR, WARM_OBJECT_INFO
+import config
+from config import AUTO_IMPORT, CERT_DIR, DATA_DIR, STATIC_DIR, WARM_OBJECT_INFO
 from comfy.client import ComfyClient
 from comfy.object_info import ObjectInfoCache
 from comfy.ws_listener import ComfyWSListener
@@ -85,15 +86,17 @@ def create_app() -> FastAPI:
 
     # 局域网访问令牌（可选）：/api/* 与 /ws 需带 X-Access-Token 头或 ?token= 参数。
     # 静态文件（PWA 壳）不拦截——壳本身无机密，数据全在 API 层。
-    if ACCESS_TOKEN:
-        @app.middleware("http")
-        async def _access_token_auth(request, call_next):
-            path = request.url.path
-            if path.startswith("/api/") or path == "/ws":
-                token = request.headers.get("X-Access-Token") or request.query_params.get("token")
-                if token != ACCESS_TOKEN:
+    # 始终注册中间件、请求时动态读取 config.ACCESS_TOKEN：设置页热更新令牌立即生效。
+    @app.middleware("http")
+    async def _access_token_auth(request, call_next):
+        path = request.url.path
+        if path.startswith("/api/") or path == "/ws":
+            token = config.ACCESS_TOKEN
+            if token:
+                got = request.headers.get("X-Access-Token") or request.query_params.get("token")
+                if got != token:
                     return JSONResponse({"detail": "需要访问令牌"}, status_code=401)
-            return await call_next(request)
+        return await call_next(request)
 
     # 局域网 HTTPS 引导：手机在控制层还是 HTTP 时下载根证书装信任。
     # ca.crt 是公开证书（私钥 ca.key 永不外发），无需鉴权即可取。

@@ -62,5 +62,13 @@ MAX_LORAS = 8        # LoRA 数量上限
 UPLOAD_TYPE = "input"
 
 # 访问令牌（局域网鉴权）：留空 = 不鉴权；设置后 /api/* 与 /ws 需带 X-Access-Token 头
-# 或 ?token= 查询参数（图片 <img> 标签用）。可用环境变量 ACCESS_TOKEN 覆盖。
-ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN", "")
+# 或 ?token= 查询参数（图片 <img> 标签用）。
+# 来源优先级：data/settings.json（设置页"生成并启用"）> 环境变量 ACCESS_TOKEN。
+# 修改经 api/settings.py 热更新（set_access_token），无需重启。
+ACCESS_TOKEN = (_RUNTIME.get("access_token") or os.environ.get("ACCESS_TOKEN", ""))
+
+
+def set_access_token(token: str) -> None:
+    """热更新令牌（设置页保存时调用）：立即生效，旧令牌即刻失效。"""
+    global ACCESS_TOKEN
+    ACCESS_TOKEN = (token or "").strip()
